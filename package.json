@@ -30,6 +30,7 @@
     "eslint-config-airbnb-typescript": "17.0.0",
     "serverless": "3.22.0",
     "serverless-domain-manager": "6.1.0",
+    "serverless-frontend-plugin": "^2.0.0",
     "serverless-offline": "10.0.1",
     "serverless-plugin-typescript": "2.1.2"
   },

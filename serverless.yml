@@ -30,11 +30,14 @@ provider:
 plugins:
   - serverless-plugin-typescript
   - serverless-domain-manager
+  - serverless-frontend-plugin
   - serverless-offline
 
 custom:
+  httpPort: ${env:HTTP_PORT, 3000}
   serverless-offline:
-    httpPort: ${env:HTTP_PORT, 3000}
+    httpPort: ${self:custom.httpPort}
+  # API Domain Configuration
   customDomain:
     domainName: ${env:API_DOMAIN_NAME}
     stage: ${self:provider.stage}
@@ -45,6 +48,28 @@ custom:
     securityPolicy: tls_1_2
     apiType: http
     autoDomain: true
+  # Frontend Configuration
+  serverless-frontend-plugin:
+    distDir: frontend/dist
+    build:
+      cwdDir: frontend
+      command:
+        - npm
+        - run
+        - build
+      env:
+        VUE_APP_API_BASE_URL: https://${env:API_DOMAIN_NAME}
+    distribution:
+      acmCertificateArn: ${env:AWS_ACM_CERTIFICATE_ARN}
+      dnsName: ${env:FRONTEND_DOMAIN_NAME}
+      hostedZoneName: ${env:HOSTED_ZONE_NAME}
+    offline:
+      env:
+        VUE_APP_API_BASE_URL: http://localhost:${self:custom.httpPort}
+      command:
+        - npm
+        - run
+        - serve
 
 functions:
   api:
