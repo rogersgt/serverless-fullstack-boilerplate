@@ -4,8 +4,10 @@
       alt="Vue logo"
       src="../assets/logo.png"
     />
-    <button @click="getStatus">Get API Status</button>
-    <p>{{ statusMessage }}</p>
+    <div>
+      <button @click="getStatus">Get API Status</button>
+      <p>{{ statusMessage }}</p>
+    </div>
   </div>
 </template>
 
