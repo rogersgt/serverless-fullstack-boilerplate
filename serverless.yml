@@ -1,0 +1,53 @@
+service: ${env:APP_NAME}
+frameworkVersion: '3'
+
+useDotenv: true
+
+configValidationMode: warn
+
+deprecationNotificationMode: warn:summary
+
+provider:
+  name: aws
+  stage: ${env:STAGE, 'dev'}
+  stackName: ${self:service}-${self:provider.stage}
+  region: ${env:AWS_REGION, 'us-east-1'}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - ssm:GetParameter*
+          Resource:
+            - arn:aws:ssm:${self:provider.region}:${aws:accountId}:parameter/${self:provider.stage}/${self:service}
+            - arn:aws:ssm:${self:provider.region}:${aws:accountId}:parameter/${self:provider.stage}/${self:service}/*
+  environment:
+    APP_NAME: ${self:service}
+    LOG_LEVEL: ${env:LOG_LEVEL, 'info'}
+    STAGE: ${self:provider.stage}
+    ALLOW_CORS_ORIGIN: ${env:ALLOW_CORS_ORIGIN, '${ssm:/${self:provider.stage}/${self:service}/ALLOW_CORS_ORIGIN}'}
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-domain-manager
+  - serverless-offline
+
+custom:
+  serverless-offline:
+    httpPort: ${env:HTTP_PORT, 3000}
+  customDomain:
+    domainName: ${env:API_DOMAIN_NAME}
+    stage: ${self:provider.stage}
+    basePath: ''
+    certificateArn: ${env:AWS_ACM_CERTIFICATE_ARN}
+    createRoute53Record: true
+    endpointType: REGIONAL
+    securityPolicy: tls_1_2
+    apiType: http
+    autoDomain: true
+
+functions:
+  api:
+    handler: src/index.api
+    events:
+      - httpApi: '*'
