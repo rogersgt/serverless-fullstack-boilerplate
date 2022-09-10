@@ -1,5 +1,5 @@
 # serverless-fullstack-boilerplate
-Quick start full stack application on AWS with Lambda and Cloudfront
+Quick start full stack application on AWS: TypeScript Express Lambda API, and Vue 3 on Cloudfront
 
 ## Setup
 * Copy `sample.env` to a new file called `.env`. Replace the values as needed. *NOTE: APP_NAME will determine the name of the CloudFormation stack, so it's important to stick with the same name after initial deployment.*
