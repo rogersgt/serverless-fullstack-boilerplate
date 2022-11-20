@@ -9,6 +9,7 @@ deprecationNotificationMode: warn:summary
 
 provider:
   name: aws
+  runtime: nodejs16.x
   stage: ${env:STAGE, 'dev'}
   stackName: ${self:service}-${self:provider.stage}
   region: ${env:AWS_REGION, 'us-east-1'}
